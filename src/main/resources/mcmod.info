@@ -1,0 +1,16 @@
+[
+{
+  "modid": "vapu",
+  "name": "Vapu",
+  "description": "Inject vape with mixin and make it run standalone..",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/iceBear67/vapu",
+  "updateUrl": "",
+  "authorList": ["iceBear67"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,26 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+
+# vape
+lib/vape-v4-re.jar
+src/main/resources/obfmap-402.json
