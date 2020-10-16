@@ -44,7 +44,10 @@ dependencies {
 }
 jar {
     manifest.attributes([
-            "tweakClass": "io.ib67.MixinTweaker",
+/*            "TweakClass": "io.ib67.MixinTweaker",
+            "TweakOrder": 0*/
+            'FMLCorePluginContainsFMLMod': 'true',
+            'FMLCorePlugin': 'io.ib67.LoadingPlugin',
     ])
 }
 shadowJar{

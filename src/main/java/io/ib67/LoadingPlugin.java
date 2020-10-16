@@ -1,8 +1,7 @@
 package io.ib67;
 
-import net.minecraft.launchwrapper.ITweaker;
-import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.relauncher.CoreModManager;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
@@ -12,14 +11,10 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.CodeSource;
-import java.util.List;
+import java.util.Map;
 
-public class MixinTweaker implements ITweaker {
-
-    public final void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {
-    }
-
-    public final void injectIntoClassLoader(LaunchClassLoader classLoader) {
+public class LoadingPlugin implements IFMLLoadingPlugin {
+    public LoadingPlugin(){
         LogManager.getLogger().info("Loading Mixin");
         MixinBootstrap.init();
         Mixins.addConfiguration("mixins.vapu.json");
@@ -40,12 +35,28 @@ public class MixinTweaker implements ITweaker {
             LogManager.getLogger().warn(this.getClass().getProtectionDomain());
         }
     }
-
-    public String getLaunchTarget() {
-        return MixinBootstrap.getPlatform().getLaunchTarget();
+    @Override
+    public String[] getASMTransformerClass() {
+        return new String[0];
     }
 
-    public String[] getLaunchArguments() {
-        return new String[0];
+    @Override
+    public String getModContainerClass() {
+        return null;
+    }
+
+    @Override
+    public String getSetupClass() {
+        return null;
+    }
+
+    @Override
+    public void injectData(Map<String, Object> map) {
+
+    }
+
+    @Override
+    public String getAccessTransformerClass() {
+        return null;
     }
 }
