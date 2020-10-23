@@ -1,6 +1,8 @@
 {
   "package": "io.ib67.mixins",
-  "mixins": [],
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
   "client": [],
   "server": []
 }
