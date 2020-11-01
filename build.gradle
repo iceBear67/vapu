@@ -2,7 +2,11 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven {
+            name = "forge"
+            url = "https://lss233.com/artifactory/minecraft"
+        }
+        //maven { url = "http://files.minecraftforge.net/maven" }
         maven { url = "https://repo.spongepowered.org/maven" }
         maven { url 'https://plugins.gradle.org/m2' }
     }
@@ -44,12 +48,13 @@ dependencies {
 
 }
 jar {
-    //manifest.attributes([
-//            'FMLCorePluginContainsFMLMod': 'true',
-  //          "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
-    //        "ForceLoadAsMod": "true",
-      //      'FMLCorePlugin': 'io.ib67.LoadingPlugin',
-    //])
+    manifest.attributes([
+            'FMLCorePluginContainsFMLMod': 'true',
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "ForceLoadAsMod": "true",
+            'FMLCorePlugin': 'io.ib67.LoadingPlugin',
+    ])
+
     from (configurations.compile.collect { entry -> zipTree(entry) }) {
         exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/*.SF'
