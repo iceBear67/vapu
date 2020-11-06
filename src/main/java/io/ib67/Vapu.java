@@ -18,7 +18,7 @@ public class Vapu{
                 LiteralArgumentBuilder.<String>literal("inject")
                 .then(
                         RequiredArgumentBuilder.<String,Integer>argument("pid",integer()).executes(s->{
-                            new Injector(getInteger(s,"pid")).inject();
+                            new Injector(getInteger(s,"pid")).inject(Agent.class.getProtectionDomain().getCodeSource().getLocation().getFile().replaceFirst("\\/",""));
                             return 0; }
                         )
                 )
@@ -27,6 +27,7 @@ public class Vapu{
     }
     private static void waitCommand(){
         Scanner scanner=new Scanner(System.in);
+        System.out.print("$ ");
         while(scanner.hasNext()){
             String s=scanner.nextLine();
             try {
@@ -34,6 +35,7 @@ public class Vapu{
             }catch(CommandSyntaxException e){
                 System.out.println(e.getMessage());
             }
+            System.out.print("$ ");
         }
     }
 }

@@ -26,7 +26,8 @@ repositories {
 shadowJar{
     zip64 true
     manifest {
-        attributes 'Main-Class': 'io.ib67.Vapu'
+        attributes 'Main-Class': 'io.ib67.Vapu',
+        'Agent-Class': 'io.ib67.Agent'
     }
 }
 dependencies {

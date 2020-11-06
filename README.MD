@@ -1,5 +1,6 @@
 # Vapu
 用Mixin注入Vape关键类实现native脱离从而实现单独运行。  
+Inject vape with mixin to achieve native detachment      
 *注意: 本仓库不包含v4本体,混淆表.*  
 *Note: This repository does not contain v4 ontology,v4-obfmap.*
 
