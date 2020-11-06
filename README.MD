@@ -1,8 +1,7 @@
-# Vapu
-用Mixin注入Vape关键类实现native脱离从而实现单独运行。  
-Inject vape with mixin to achieve native detachment      
-*注意: 本仓库不包含v4本体,混淆表.*  
-*Note: This repository does not contain v4 ontology,v4-obfmap.*
-
-**仅作Mixin学习用途，不承担任何责任**  
-**For Mixin learning purposes only, no liability**
+# Tools - Dumper
+Dumper是一个用于dump class的实用工具包。  
+Scanner负责收集.minecraft文件夹中已经存有的class作为黑名单  
+Injector负责作为注入器注入MC监听transform class并匹配名单做到dump.  
+  
+该工具因为一些硬编码代码的原因，或许仅支持Windows。  
+~~如果你能在linux下注入vape就做linux support~~

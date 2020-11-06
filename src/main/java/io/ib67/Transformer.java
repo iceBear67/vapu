@@ -16,19 +16,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Transformer implements ClassFileTransformer {
-    private final List<String> blackListed=new ArrayList<>();
+    private final List<String> blackListed;
     private final DateFormat sdf=SimpleDateFormat.getTimeInstance();
     private final String outputDir;
-    public Transformer(Class<?>[] blackListed,String path){
+    public Transformer(List<String> blackListed,String path){
         System.out.println("Vapu Dumper Injected! Loading");
         outputDir=path;
-        for (Class<?> aClass : blackListed) {
-                this.blackListed.add(aClass.getCanonicalName());
-        }
+        this.blackListed=blackListed;
     }
     @Override
     public byte[] transform(ClassLoader classLoader, String s, Class<?> aClass, ProtectionDomain protectionDomain, byte[] bytes) throws IllegalClassFormatException {
-        if(blackListed.contains(s)){
+        if(blackListed.contains(s) || s.startsWith("java") || s.startsWith("net/minecraft") || s.startsWith("sun") || s.startsWith("com/sun") || s.startsWith("jdk")){
             return bytes;
         }
         System.out.println("Transform Class: "+s + " Time: "+sdf.format(new Date()));
