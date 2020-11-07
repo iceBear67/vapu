@@ -8,7 +8,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.ib67.scanner.ClassScanner;
+import org.apache.commons.io.FileUtils;
+import org.objectweb.asm.ClassReader;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -51,6 +55,30 @@ public class Vapu{
                             }
                             return 0;
                         })
+                )
+        );
+        dispatcher.register(
+                LiteralArgumentBuilder.<String>literal("namefix").executes(s->{
+                    File temp=new File("vapu_dump_out/");
+                    File out=new File("out");
+                    for (File file : FileUtils.listFiles(temp, null, true)) {
+                        if(file.getName().endsWith("class")){
+                            try {
+                                System.out.println("Loading..." + file.getName());
+                                String newName = new ClassReader(new FileInputStream(file)).getClassName();
+                                System.out.println("Mapping: " + file.getName() + " to " + newName + ".class");
+                                File destin = new File(out + "/" + newName + ".class");
+                                destin.getParentFile().mkdirs();
+                                FileUtils.copyFile(file,destin);
+                            }catch(IOException e){
+                                e.printStackTrace();
+                            }
+                        }else{
+                            System.out.println("Skip..."+file.getName());
+                        }
+                    }
+                    return 0;
+                        }
                 )
         );
         waitCommand();
