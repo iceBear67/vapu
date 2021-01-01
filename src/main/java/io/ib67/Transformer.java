@@ -22,6 +22,7 @@ public class Transformer implements ClassFileTransformer {
     private final DateFormat sdf=SimpleDateFormat.getTimeInstance();
     private final String outputDir;
     private int counter=0;
+    private List<ClassLoader> cls=new ArrayList();
     public Transformer(List<String> blackListed,String path){
         System.out.println("Vapu Dumper Injected! Loading");
         outputDir=path;
@@ -34,6 +35,10 @@ public class Transformer implements ClassFileTransformer {
         }
         System.out.println("Transform Class: "+s + " Time: "+sdf.format(new Date()));
         output(s,bytes,classLoader);
+        if(!cls.contains(classLoader)){
+            cls.add(classLoader);
+            System.out.println("New classloader detected: "+classLoader+" parent:"+classLoader.getParent());
+        }
         return bytes;
     }
     private void output(String className,byte[] data,ClassLoader cl){
