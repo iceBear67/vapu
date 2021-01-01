@@ -1,5 +1,7 @@
 package io.ib67;
 
+import jdk.internal.org.objectweb.asm.ClassReader;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
@@ -19,6 +21,7 @@ public class Transformer implements ClassFileTransformer {
     private final List<String> blackListed;
     private final DateFormat sdf=SimpleDateFormat.getTimeInstance();
     private final String outputDir;
+    private int counter=0;
     public Transformer(List<String> blackListed,String path){
         System.out.println("Vapu Dumper Injected! Loading");
         outputDir=path;
@@ -30,11 +33,13 @@ public class Transformer implements ClassFileTransformer {
             return bytes;
         }
         System.out.println("Transform Class: "+s + " Time: "+sdf.format(new Date()));
-        output(s,bytes);
+        output(s,bytes,classLoader);
         return bytes;
     }
-    private void output(String className,byte[] data){
-        File f=new File(outputDir+className.replaceAll("\\.","/").concat(".class"));
+    private void output(String className,byte[] data,ClassLoader cl){
+        String realName=new ClassReader(data).getClassName();
+        counter++;
+        File f=new File(outputDir+cl.toString()+"/"+className.replaceAll("\\.","/").concat(" - ").concat(realName).concat(".class").concat(String.valueOf(counter)).concat(String.valueOf(System.currentTimeMillis())));
         f.getParentFile().mkdirs();
         try {
             Files.write(f.toPath(), data);
