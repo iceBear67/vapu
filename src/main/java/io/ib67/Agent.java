@@ -22,12 +22,14 @@ import java.util.List;
 
 public class Agent {
     public static ObserverTransformer observerTransformer=new ObserverTransformer();
+    public static Instrumentation instru;
     public static void agentmain(String agentArgs,Instrumentation instru) {
+        Agent.instru=instru;
         System.out.println("Agent loading with args: "+agentArgs);
         if(!agentArgs.equals("obfgen")){
             instru.addTransformer(new Transformer(getBlocked(agentArgs+"class-bl.json"), agentArgs+"vapu_dump_out/"));
         }else{
-            instru.addTransformer(observerTransformer);
+
         }
 
     }

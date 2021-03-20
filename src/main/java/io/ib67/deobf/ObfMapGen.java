@@ -17,7 +17,13 @@ public class ObfMapGen {
     public static void generate(String intListLoc) throws Exception{
         Map<String,String> map=new HashMap<>();
         List<String> context= new Gson().fromJson(new String(Files.readAllBytes(Paths.get(intListLoc))),new TypeToken<List<String>>(){}.getType());
-        Class<?> aclazz=Class.forName("a.a",false, Agent.observerTransformer.lastActivatedCL);
+
+        Class<?> aclazz=null;
+        for (Class allLoadedClass : Agent.instru.getAllLoadedClasses()) {
+            if("a.a".equals(allLoadedClass.getCanonicalName())){
+                aclazz=allLoadedClass;
+            }
+        }
         Method method=null;
         for (Method declaredMethod : aclazz.getDeclaredMethods()) {
             if (declaredMethod.getName().equals("cs")) {
