@@ -22,5 +22,5 @@ eclipse
 run
 
 # vape
-lib/vape-v4-re.jar
-src/main/resources/obfmap-402.json
+lib/vape_v4.04_2021.3.20.1134.jar
+src/main/resources/obfmap-v4.04-20210320-1331.json
