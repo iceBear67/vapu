@@ -1,6 +1,6 @@
 package io.ib67;
 
-import jdk.internal.org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassReader;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,15 +12,14 @@ import java.nio.file.Paths;
 import java.security.ProtectionDomain;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.zip.CRC32;
 
 public class Transformer implements ClassFileTransformer {
     private final List<String> blackListed;
     private final DateFormat sdf=SimpleDateFormat.getTimeInstance();
     private final String outputDir;
+    private final HashSet<String> loadedCRC=new HashSet<>();
     private int counter=0;
     private List<ClassLoader> cls=new ArrayList();
     public Transformer(List<String> blackListed,String path){
@@ -44,9 +43,26 @@ public class Transformer implements ClassFileTransformer {
     private void output(String className,byte[] data,ClassLoader cl){
         String realName=new ClassReader(data).getClassName();
         counter++;
-        File f=new File(outputDir+cl.toString()+"/"+className.replaceAll("\\.","/").concat(" - ").concat(realName).concat(".class").concat(String.valueOf(counter)).concat(String.valueOf(System.currentTimeMillis())));
+        File f=new File(outputDir+cl.toString()+"/"+className.replaceAll("\\.","/").concat(".class"));
         f.getParentFile().mkdirs();
         try {
+            int i=0;
+            while(f.exists()){
+                CRC32 c=new CRC32();
+                c.update(data);
+                long writingCRC32=c.getValue();
+                if(loadedCRC.contains(className+writingCRC32)){
+                    i++;
+                    f=new File(outputDir+cl.toString()+"/"+className.replaceAll("\\.","/").concat(".class.")+i);
+                    System.out.println("CONFLICT FILE: "+className+" CRC32: "+Long.toHexString(writingCRC32));
+                }
+        }
+            CRC32 c=new CRC32();
+            c.update(data);
+            if(!loadedCRC.contains(className+c.getValue())){
+                loadedCRC.add(className+c.getValue());
+            }
+            long originalCRC32=c.getValue();
             Files.write(f.toPath(), data);
         }catch(IOException e){
             e.printStackTrace();

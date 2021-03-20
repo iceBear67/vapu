@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import io.ib67.deobf.ObserverTransformer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,9 +21,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class Agent {
+    public static ObserverTransformer observerTransformer=new ObserverTransformer();
     public static void agentmain(String agentArgs,Instrumentation instru) {
         System.out.println("Agent loading with args: "+agentArgs);
-        instru.addTransformer(new Transformer(getBlocked(agentArgs+"class-bl.json"), agentArgs+"vapu_dump_out/"));
+        if(!agentArgs.equals("obfgen")){
+            instru.addTransformer(new Transformer(getBlocked(agentArgs+"class-bl.json"), agentArgs+"vapu_dump_out/"));
+        }else{
+            instru.addTransformer(observerTransformer);
+        }
+
     }
     private static List<String> getBlocked(String path){
         try {

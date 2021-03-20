@@ -7,6 +7,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.ib67.deobf.Seeker;
 import io.ib67.scanner.ClassScanner;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
@@ -14,8 +15,13 @@ import org.objectweb.asm.ClassReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -34,10 +40,19 @@ public class Vapu{
                 LiteralArgumentBuilder.<String>literal("inject")
                 .then(
                         RequiredArgumentBuilder.<String,Integer>argument("pid",integer()).executes(s->{
-                            new Injector(getInteger(s,"pid")).inject(Agent.class.getProtectionDomain().getCodeSource().getLocation().getFile().replaceFirst("\\/",""));
+                            new Injector(getInteger(s,"pid")).inject(Agent.class.getProtectionDomain().getCodeSource().getLocation().getFile().replaceFirst("\\/",""),new File(".").getAbsolutePath()+"\\");
                             return 0; }
                         )
                 )
+        );
+        dispatcher.register(
+                LiteralArgumentBuilder.<String>literal("obfgen")
+                        .then(
+                                RequiredArgumentBuilder.<String,Integer>argument("pid",integer()).executes(s->{
+                                    new Injector(getInteger(s,"pid")).inject(Agent.class.getProtectionDomain().getCodeSource().getLocation().getFile().replaceFirst("\\/",""),"obfgen");
+                                    return 0; }
+                                )
+                        )
         );
         dispatcher.register(
                 LiteralArgumentBuilder.<String>literal("scan")
@@ -79,6 +94,37 @@ public class Vapu{
                     }
                     return 0;
                         }
+                )
+        );
+        dispatcher.register(
+                LiteralArgumentBuilder.<String>literal("pack").then(
+                        RequiredArgumentBuilder.<String,String>argument("src",string())
+                        .executes(source->{
+                            String src=source.getArgument("src",String.class);
+                            try {
+                                Packager.compress(src,"./dump-"+new SimpleDateFormat().format(new Date())+".jar");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return 0;
+                        })
+                )
+        );
+        dispatcher.register(
+                LiteralArgumentBuilder.<String>literal("seek")
+                .then(
+                        RequiredArgumentBuilder.<String,String>argument("where",string())
+                        .executes(src->{
+                            System.out.println("Processing classes...");
+                            Seeker seeker=new Seeker(src.getArgument("where",String.class));
+                            try {
+                                Files.write(new File("obfKeys.json").toPath(),gson.toJson(seeker.start()).getBytes(StandardCharsets.UTF_8));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            System.out.println("Operation Finished!");
+                            return 0;
+                        })
                 )
         );
         waitCommand();

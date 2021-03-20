@@ -32,6 +32,7 @@ shadowJar{
 }
 dependencies {
     compile 'com.mojang:brigadier:1.0.17'
+    implementation 'org.benf:cfr:0.151'
     compile group: 'org.ow2.asm', name: 'asm', version: '9.0'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     compile group: 'commons-io', name: 'commons-io', version: '2.8.0'

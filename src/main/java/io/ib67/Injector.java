@@ -11,12 +11,12 @@ public class Injector {
     public Injector(int pid){
         this.pid=pid;
     }
-    public void inject(String path){
+    public void inject(String path,String arg){
         try {
             String decodedPath = URLDecoder.decode(path, "UTF-8");
             System.out.println("Loading agent: "+decodedPath);
             VirtualMachine vm = VirtualMachine.attach(String.valueOf(pid));
-            vm.loadAgent(decodedPath, new File(".").getAbsolutePath()+"\\");
+            vm.loadAgent(decodedPath, arg);
             vm.detach();
             System.out.println("Injection succeed! Output dir: vapu_dump_out/");
         }catch(Exception e){
